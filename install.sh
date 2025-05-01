@@ -5,7 +5,7 @@
 # Data: Maio 2025
 
 # --- Configuração --- #
-DOWNLOAD_URL="https://github.com/rafaelhschuh/samba-4-scipts-test/raw/refs/heads/main/samba_manager.zip"
+DOWNLOAD_URL="https://raw.githubusercontent.com/rafaelhschuh/samba-4-scipts-test/refs/heads/main/samba_manager.zip"
 INSTALL_BASE_DIR="/opt/samba-manager-app"
 INSTALL_SCRIPT_DIR="$INSTALL_BASE_DIR/samba_manager"
 INSTALL_LOG_DIR="$INSTALL_BASE_DIR/logs"
