@@ -41,10 +41,12 @@ info() {
 
 info "Iniciando instalação automatizada do Samba Manager..."
 
+# Verificar se o script está sendo executado como root
 if [ "$(id -u)" != "0" ]; then
-    erro "Este script precisa ser executado como root. Use 'sudo bash -c \"\$(wget...)\"' ou 'sudo bash -c \"\$(curl...)\"'"
+    erro "Este script precisa ser executado como root. Use 'sudo bash install.sh'."
 fi
 
+# Verificar dependências
 info "Verificando dependências (wget/curl, unzip)..."
 DOWNLOAD_CMD=""
 if command -v wget > /dev/null; then
@@ -65,52 +67,57 @@ if ! command -v unzip > /dev/null; then
 fi
 sucesso "Dependências verificadas."
 
+# Baixar o arquivo
 info "Baixando de $DOWNLOAD_URL..."
 rm -f "$TMP_ZIP_FILE"
 if ! $DOWNLOAD_CMD "$TMP_ZIP_FILE" "$DOWNLOAD_URL"; then
     erro "Falha ao baixar de $DOWNLOAD_URL"
 fi
 [ -s "$TMP_ZIP_FILE" ] || erro "Arquivo baixado está vazio."
-
 sucesso "Download concluído."
 
+# Remover instalação anterior, se existir
 [ -d "$INSTALL_BASE_DIR" ] && {
     info "Removendo instalação anterior..."
     rm -rf "$INSTALL_BASE_DIR" || erro "Não foi possível remover $INSTALL_BASE_DIR"
     sucesso "Instalação anterior removida."
 }
 
+# Criar diretório de instalação
 info "Criando diretório $INSTALL_BASE_DIR..."
 mkdir -p "$INSTALL_BASE_DIR" || erro "Erro ao criar $INSTALL_BASE_DIR"
 
+# Extrair o arquivo ZIP
 info "Extraindo $TMP_ZIP_FILE..."
-unzip -o "$TMP_ZIP_FILE" "$ZIP_ROOT_DIR/*" -d "$INSTALL_BASE_DIR/" > /dev/null 2>&1 || {
+if ! unzip -o "$TMP_ZIP_FILE" "$ZIP_ROOT_DIR/*" -d "$INSTALL_BASE_DIR/" > /dev/null 2>&1; then
     info "Tentando extração alternativa..."
-    unzip -o "$TMP_ZIP_FILE" -d "$INSTALL_BASE_DIR/" > /dev/null 2>&1 || {
+    if ! unzip -o "$TMP_ZIP_FILE" -d "$INSTALL_BASE_DIR/" > /dev/null 2>&1; then
         rm -f "$TMP_ZIP_FILE"
         rm -rf "$INSTALL_BASE_DIR"
         erro "Falha ao extrair $TMP_ZIP_FILE"
-    }
-}
+    fi
+fi
 
+# Mover conteúdo extraído para a raiz do diretório de instalação
 if [ -d "$INSTALL_BASE_DIR/$ZIP_ROOT_DIR" ]; then
     info "Movendo conteúdo para raiz..."
     shopt -s dotglob
-    mv "$INSTALL_BASE_DIR/$ZIP_ROOT_DIR/"* "$INSTALL_BASE_DIR/"
+    mv "$INSTALL_BASE_DIR/$ZIP_ROOT_DIR/"* "$INSTALL_BASE_DIR/" || erro "Falha ao mover conteúdo do diretório $ZIP_ROOT_DIR."
     shopt -u dotglob
-    rmdir "$INSTALL_BASE_DIR/$ZIP_ROOT_DIR" || aviso "Falha ao remover diretório temporário"
+    rmdir "$INSTALL_BASE_DIR/$ZIP_ROOT_DIR" || aviso "Falha ao remover diretório temporário $ZIP_ROOT_DIR."
 fi
 sucesso "Extração concluída."
 
+# Verificar se o script principal existe
 MAIN_SCRIPT_PATH="$INSTALL_SCRIPT_DIR/samba_manager.sh"
 [ -f "$MAIN_SCRIPT_PATH" ] || {
     rm -f "$TMP_ZIP_FILE"
     rm -rf "$INSTALL_BASE_DIR"
     erro "Script principal não encontrado em $MAIN_SCRIPT_PATH"
 }
-
 info "Script principal localizado em: $MAIN_SCRIPT_PATH"
 
+# Criar diretório de logs
 [ -d "$INSTALL_LOG_DIR" ] || {
     info "Criando diretório de logs..."
     mkdir -p "$INSTALL_LOG_DIR" || erro "Falha ao criar logs"
@@ -120,9 +127,11 @@ chmod 775 "$INSTALL_LOG_DIR"
 chown -R root:root "$INSTALL_BASE_DIR"
 chmod -R 755 "$INSTALL_BASE_DIR"
 
+# Tornar scripts executáveis
 info "Tornando scripts executáveis..."
 find "$INSTALL_SCRIPT_DIR" -name '*.sh' -exec chmod +x {} \; || aviso "Alguns scripts não foram alterados."
 
+# Criar lançador
 info "Criando lançador em $LAUNCHER_PATH..."
 cat > "$LAUNCHER_PATH" << EOF
 #!/bin/bash
