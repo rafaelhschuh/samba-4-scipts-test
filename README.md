@@ -1,98 +1,129 @@
-# Samba 4 Manager - Debian Scripts
+# Samba 4 Manager - Debian Scripts (Refatorado)
 
-[![Author](https://img.shields.io/badge/Author-Rafael%20Schuh-blue.svg)](https://github.com/rafaelhschuh)
-[![GitHub stars](https://img.shields.io/github/stars/rafaelhschuh/samba-4-scipts.svg?style=social&label=Star&maxAge=2592000)](https://github.com/rafaelhschuh/samba-4-scipts/stargazers/)
+[![Author](https://img.shields.io/badge/Author-Rafael%20Schuh%20%26%20Manus-blue.svg)](https://github.com/rafaelhschuh)
 
 ---
 
-## Overview
+## Visão Geral
 
-Welcome to the **Samba 4 Manager** script collection! This set of scripts provides a user-friendly, terminal-based interface (`dialog`) to simplify the installation, configuration, and management of Samba 4 on Debian-based systems. Whether you need an Active Directory Domain Controller, a standalone file server, or a domain member, these scripts aim to streamline the process.
+Bem-vindo à coleção de scripts **Samba 4 Manager**! Este conjunto de scripts fornece uma interface amigável baseada em terminal (`dialog`) para simplificar a instalação, configuração e gerenciamento do Samba 4 em sistemas baseados em Debian. Seja para configurar um Controlador de Domínio Active Directory, um servidor de arquivos autônomo ou um membro de domínio, estes scripts visam agilizar o processo.
 
-The scripts support multiple languages (English and Brazilian Portuguese) and guide you through the necessary steps with clear prompts and feedback.
+Os scripts suportam múltiplos idiomas (Inglês e Português Brasileiro), possuem um sistema de logging centralizado e guiam você através dos passos necessários com prompts claros e feedback.
 
-## Features
+**Nota:** Esta é uma versão refatorada com estrutura de diretórios aprimorada e logging implementado.
 
-*   **Multi-language Support**: Choose between English (US) and Portuguese (Brazil) at startup.
-*   **User-Friendly Interface**: Utilizes `dialog` for a clean, menu-driven terminal experience.
-*   **Samba Installation/Update**: Checks for existing Samba installations and offers either a full installation or an update.
-*   **Versatile Samba Roles**:
-    *   Setup Samba 4 as an **Active Directory Domain Controller**.
-    *   Configure Samba 4 as a **Standalone File Server**.
-    *   Join an existing domain as a **Domain Member**.
-*   **Dependency Management**: Automatically checks and installs required dependencies for Samba and the manager scripts.
-*   **Self-Update**: Option to check for and install updates for the Samba Manager scripts directly from GitHub.
-*   **Group & Permission Management**: 
-    *   Define a global tag for groups.
-    *   Create new groups with the defined tag (`groupname-smb@tag`).
-    *   Modify group permissions on shared folders using ACLs.
-    *   List groups (with tag) and their members.
-*   **User Management**: 
-    *   Define a global tag for users (uses the same tag as groups).
-    *   Add new users with the defined tag (`username@tag`).
-    *   Associate new users with existing tagged groups.
-    *   List users (with tag).
-*   **Critical Area**: Safely remove Samba 4, the Samba Manager scripts, or both.
-*   **Automated Installation**: A simple one-line command to download and install the manager.
+## Funcionalidades
 
-## Automated Installation
+*   **Suporte Multi-idioma**: Escolha entre Inglês (US) e Português (Brasil) na inicialização.
+*   **Interface Amigável**: Utiliza `dialog` para uma experiência limpa e orientada por menus no terminal.
+*   **Instalação/Atualização do Samba**: Verifica instalações existentes do Samba e oferece instalação completa ou atualização.
+*   **Funções Versáteis do Samba**:
+    *   Configurar Samba 4 como **Controlador de Domínio Active Directory**.
+    *   Configurar Samba 4 como **Servidor de Arquivos Autônomo**.
+    *   Ingressar em um domínio existente como **Membro de Domínio**.
+*   **Gerenciamento de Dependências**: Verifica e instala automaticamente as dependências necessárias para o Samba e os scripts do gerenciador.
+*   **Sistema de Logging**: Registra as principais operações e erros em um arquivo de log centralizado (`/opt/samba-manager-app/logs/samba_manager.log` por padrão após instalação).
+*   **Auto-Atualização**: Opção para verificar e instalar atualizações para os scripts do Samba Manager (funcionalidade original, pode precisar de revisão no script `atualizar_manager.sh` para compatibilidade com nova estrutura).
+*   **Gerenciamento de Grupos e Permissões**: 
+    *   Definir uma tag global para grupos.
+    *   Criar novos grupos com a tag definida (`nomegrupo-smb@tag`).
+    *   Modificar permissões de grupo em pastas compartilhadas usando ACLs.
+    *   Listar grupos (com tag) e seus membros.
+*   **Gerenciamento de Usuários**: 
+    *   Definir uma tag global para usuários (usa a mesma tag dos grupos).
+    *   Adicionar novos usuários com a tag definida (`nomeusuario@tag`).
+    *   Associar novos usuários a grupos com tag existentes.
+    *   Listar usuários (com tag).
+*   **Área Crítica**: Remover com segurança o Samba 4, os scripts do Samba Manager, ou ambos.
+*   **Instalação Simplificada**: Um script `install.sh` para copiar os arquivos para `/opt/samba-manager-app` e criar um lançador.
 
-To quickly install or update the Samba 4 Manager on your Debian system, you can use the automated installation script directly from GitHub. This script will download the necessary files to a hidden directory (`~/.samba-scripts`) and create a convenient launcher command (`samba-script`) in `/usr/local/bin`.
+## Instalação
 
-**Run the following command as root:**
-
-```bash
-sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/rafaelhschuh/samba-4-scipts-test/main/install.sh)"
-```
-
-*Or using curl:*
+Para instalar ou atualizar o Samba 4 Manager no seu sistema Debian, execute o intalador automático, copiando e colando no seu terminal:
 
 ```bash
-sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/rafaelhschuh/samba-4-scipts-test/main/install.sh)"
+sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/rafaelhschuh/samba-4-scipts/main/install.sh)"
 ```
 
-This command downloads and executes the installer script, which handles the rest.
-
-## Usage
-
-After a successful installation using the automated script above, you can run the Samba 4 Manager from anywhere in your terminal using the following command:
+**Ou com curl:**
 
 ```bash
-sudo samba-script
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/rafaelhschuh/samba-4-scipts/main/install.sh)"
 ```
 
-1.  You will be prompted to select your preferred language (English or Portuguese).
-2.  The main menu will appear, allowing you to choose between:
-    *   **Install/Update Samba 4**: Checks if Samba is installed. If not, guides you through setting up Samba as a DC, File Server, or Domain Member. If installed, offers to update Samba packages.
-    *   **Update Samba Manager**: Checks for and installs updates for these manager scripts from GitHub.
-    *   **Manage Groups & Permissions**: Define a global tag, create tagged groups (`group-smb@tag`), manage folder permissions (ACLs) for these groups.
-    *   **Manage Users**: Add new tagged users (`user@tag`), associate them with tagged groups, list tagged users.
-    *   **Critical Area**: Options to remove Samba 4, the Samba Manager scripts, or both (Use with extreme caution!).
-    *   **About**: Displays information about the script.
-    *   **Exit**: Closes the manager.
+O script de instalação irá:
+*   Verificar se está sendo executado como root.
+*   Remover qualquer instalação anterior em `/opt/samba-manager-app`.
+*   Criar os diretórios `/opt/samba-manager-app/samba_manager` e `/opt/samba-manager-app/logs`.
+*   Copiar os scripts e arquivos de documentação para `/opt/samba-manager-app`.
+*   Tornar os scripts executáveis.
+*   Criar um lançador chamado `samba-manager` em `/usr/local/bin`.
 
-Follow the on-screen instructions provided by the `dialog` interface to complete your desired tasks.
+## Uso
 
-## Documentation
+Após uma instalação bem-sucedida, você pode executar o Samba 4 Manager de qualquer lugar no seu terminal usando o seguinte comando:
 
-For more detailed instructions on installation and usage, please refer to the complete documentation available in your preferred language:
+```bash
+sudo samba-manager
+```
+
+1.  Você será solicitado a selecionar seu idioma preferido (Inglês ou Português).
+2.  O menu principal aparecerá, permitindo que você escolha entre as várias opções de gerenciamento.
+3.  As operações serão registradas no arquivo de log: `/opt/samba-manager-app/logs/samba_manager.log`.
+
+Siga as instruções na tela fornecidas pela interface `dialog` para completar as tarefas desejadas.
+
+## Estrutura de Diretórios (Após Instalação)
+
+```
+/opt/samba-manager-app/
+├── logs/
+│   └── samba_manager.log  # Arquivo de log principal
+├── samba_manager/         # Diretório principal dos scripts
+│   ├── lib/
+│   │   └── logging.sh     # Biblioteca de logging
+│   ├── locale/
+│   │   ├── en_US.sh       # Arquivo de idioma Inglês
+│   │   └── pt_BR.sh       # Arquivo de idioma Português
+│   ├── adicionar_usuario.sh
+│   ├── adicionar_usuario_dialog.sh
+│   ├── area_critica.sh
+│   ├── atualizar_manager.sh
+│   ├── gerenciar_grupos.sh
+│   ├── gerenciar_usuarios.sh
+│   ├── instalar_atualizar_samba.sh
+│   └── samba_manager.sh   # Script principal
+├── DOCUMENTACAO_PT.md
+├── DOCUMENTATION_EN.md
+└── README.md
+
+/usr/local/bin/
+└── samba-manager          # Lançador global
+```
+
+## Documentação Detalhada
+
+Para instruções mais detalhadas sobre instalação e uso, consulte a documentação completa disponível em seu idioma preferido:
 
 *   **[English Documentation](./DOCUMENTATION_EN.md)**
 *   **[Documentação em Português](./DOCUMENTACAO_PT.md)**
 
-## Requirements
+## Requisitos
 
-*   Debian-based operating system (Debian 10 Buster or later recommended).
-*   Root privileges (`sudo`).
-*   Internet connection (for downloading packages and the manager itself).
+*   Sistema operacional baseado em Debian (Debian 10 Buster ou superior recomendado).
+*   Privilégios de root (`sudo`).
+*   Conexão com a Internet (para baixar pacotes e dependências).
+*   Pacote `dialog` (será instalado automaticamente se não estiver presente).
 
-## Author
+## Autor Original
 
 *   **Rafael Schuh** - [github.com/rafaelhschuh](https://github.com/rafaelhschuh)
 
-*April 2025*
+## Refatoração e Logging
+
+*   **Manus** (Maio 2025)
 
 ---
 
-Feel free to contribute, report issues, or suggest improvements on the [GitHub repository](https://github.com/rafaelhschuh/samba-4-scipts)!
-# samba-4-scipts-test
+Sinta-se à vontade para contribuir, reportar problemas ou sugerir melhorias no repositório original ou no fork onde esta refatoração foi realizada.
+
