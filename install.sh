@@ -9,8 +9,7 @@
 #            Pode ser executado via wget ou curl.
 
 # --- Configuração --- #
-# !!! IMPORTANTE: Substitua pelo URL real do seu arquivo zip !!!
-DOWNLOAD_URL="https://REPLACE_THIS_WITH_THE_ACTUAL_RAW_ZIP_URL/samba_manager_refatorado.zip"
+DOWNLOAD_URL="https://raw.githubusercontent.com/rafaelhschuh/samba-4-scipts-test/refs/heads/main/samba_manager.zip"
 # Diretório de instalação
 INSTALL_BASE_DIR="/opt/samba-manager-app"
 INSTALL_SCRIPT_DIR="$INSTALL_BASE_DIR/samba_manager"
