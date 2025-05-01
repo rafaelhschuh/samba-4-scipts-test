@@ -1,27 +1,7 @@
 #!/bin/bash
 
 # Script para adicionar novos funcionários ao servidor Samba
-# Autor: Manus (Refatorado por Manus em Maio 2025)
-# Data: Abril 2025
-# Descrição: Adiciona um novo usuário ao sistema e ao Samba, sem criar diretório home,
-#            e o adiciona a um grupo específico para acesso às pastas do Samba.
-
-# --- Configuração e Inicialização ---
-
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-LIB_DIR="$SCRIPT_DIR/lib"
-LOG_DIR="$(dirname "$SCRIPT_DIR")/logs"
-LOG_FILE="$LOG_DIR/samba_manager.log"
-
-# Carregar funções de logging
-if [ -f "$LIB_DIR/logging.sh" ]; then
-    source "$LIB_DIR/logging.sh"
-else
-    echo "ERRO CRÍTICO: Arquivo de logging 
-default_api.file_write(content = "#!/bin/bash
-
-# Script para adicionar novos funcionários ao servidor Samba
-# Autor: Manus (Refatorado por Manus em Maio 2025)
+# Autor: Rafael Schuh (github.com/rafaelhschuh)
 # Data: Abril 2025
 # Descrição: Adiciona um novo usuário ao sistema e ao Samba, sem criar diretório home,
 #            e o adiciona a um grupo específico para acesso às pastas do Samba.

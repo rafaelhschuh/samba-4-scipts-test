@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Script Instalador Automatizado para o Samba Manager (Refatorado)
-# Autor: Rafael Schuh (github.com/rafaelhschuh) (Adaptado por Manus em Maio 2025)
+# Script Instalador Automatizado para o Samba Manager 
+# Autor: Rafael Schuh (github.com/rafaelhschuh) 
 # Data: Maio 2025
 
 # --- Configuração --- #
@@ -9,10 +9,10 @@ DOWNLOAD_URL="https://raw.githubusercontent.com/rafaelhschuh/samba-4-scipts-test
 INSTALL_BASE_DIR="/opt/samba-manager-app"
 INSTALL_SCRIPT_DIR="$INSTALL_BASE_DIR/samba_manager"
 INSTALL_LOG_DIR="$INSTALL_BASE_DIR/logs"
-TMP_ZIP_FILE="/tmp/samba-manager-refatorado.zip"
+TMP_ZIP_FILE="/tmp/samba-manager.zip"
 LAUNCHER_NAME="samba-manager"
 LAUNCHER_PATH="/usr/local/bin/$LAUNCHER_NAME"
-ZIP_ROOT_DIR="samba_manager_teste"
+ZIP_ROOT_DIR="samba_manager"
 # --- Fim da Configuração --- #
 
 # Cores para mensagens
